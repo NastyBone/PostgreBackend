@@ -9,7 +9,7 @@ exports.up = pgm => {
         content VARCHAR (1000) NOT NULL,
         created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         bumped_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        board_id INTEGER REFERENCES boards(id),
+        board_id INTEGER REFERENCES boards(id) ON DELETE CASCADE,
         password_delete VARCHAR(16) NOT NULL,
         reported BOOLEAN DEFAULT FALSE
     );`)
