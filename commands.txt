@@ -6,3 +6,6 @@ $env:DATABASE_URL="postgres://postgres:josepc@localhost:5432/annonymous-message-
 
 //CREATE MIGRATIONS
 npm run migrate create [migration name]
+
+//RUN SERVER
+node app.js
