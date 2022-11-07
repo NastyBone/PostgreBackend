@@ -1,0 +1,8 @@
+// RUN MIGRATIONS UP
+$env:DATABASE_URL="postgres://postgres:josepc@localhost:5432/annonymous-message-board";npm run migrate up
+
+// RUN MIGRATIONS DOWN
+$env:DATABASE_URL="postgres://postgres:josepc@localhost:5432/annonymous-message-board";npm run migrate DOWN
+
+//CREATE MIGRATIONS
+npm run migrate create [migration name]
