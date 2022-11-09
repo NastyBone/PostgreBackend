@@ -4,8 +4,9 @@ const repliesRepo = require('../controllers/replies.repo')
 
 // New Reply - POST
 repliesRoutes.post('/:board/:thread', async (req, res) =>{
+    const {thread } = req.params
    const { content, password_delete } = req.body
-   const rows = await repliesRepo.insert(content, password_delete)
+   const rows = await repliesRepo.insert(thread, content, password_delete)
    res.send(rows)
 })
 // Report Reply - PUT

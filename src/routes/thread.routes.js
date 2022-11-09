@@ -4,14 +4,15 @@ const threadRepo = require('../controllers/threads.repo')
 // Get Specific Thread - GET
 threadRoutes.get('/:board/:thread', async (req, res) =>{
     const { thread } = req.params
-    const { rows } = await threadRepo.find(thread)
-    res.send(rows)
+    const result = await threadRepo.find(thread)
+    res.send(result)
 })
 
 // New Thread - POST
 threadRoutes.post('/:board', async (req, res) =>{
     const { board } = req.params;
-    const rows  = await threadRepo.insert(board);
+    const {name, content, passwordDelete} = req.body
+    const rows  = await threadRepo.insert(name, content, board, passwordDelete);
     res.send(rows) 
 })
 // Report Thread - PUT
@@ -23,8 +24,8 @@ threadRoutes.put('/:board/:thread', async (req, res) =>{
 // Delete Thread - DELETE
 threadRoutes.delete('/:board/:thread', async (req, res) =>{
     const { thread } = req.params
-    const { deletePassword } = req.body
-    const rows = await threadRepo.delete(thread, deletePassword)
+    const { passwordDelete } = req.body
+    const rows = await threadRepo.delete(thread, passwordDelete)
     res.send(rows)
 })
 module.exports = threadRoutes
