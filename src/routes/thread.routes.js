@@ -1,21 +1,30 @@
 const threadRoutes = require('express').Router();
+const threadRepo = require('../controllers/threads.repo')
 
-// Get Threads - GET
+// Get Specific Thread - GET
 threadRoutes.get('/:board/:thread', async (req, res) =>{
-    const params = req.params
-    res.send('on threads, showing replies', ...params)
+    const { thread } = req.params
+    const { rows } = await threadRepo.find(thread)
+    res.send(rows)
 })
 
 // New Thread - POST
 threadRoutes.post('/:board', async (req, res) =>{
-    res.send('on board, creating a thread')
+    const { board } = req.params;
+    const rows  = await threadRepo.insert(board);
+    res.send(rows) 
 })
 // Report Thread - PUT
-threadRoutes.put('/:board', async (req, res) =>{
-    res.send('on board, reporting a thread')
+threadRoutes.put('/:board/:thread', async (req, res) =>{
+    const { thread } = req.params
+    const rows = await threadRepo.report(thread)
+    res.send(rows)
 })
 // Delete Thread - DELETE
-threadRoutes.delete('/:board', async (req, res) =>{
-    res.send('on board, deleting a thread')
+threadRoutes.delete('/:board/:thread', async (req, res) =>{
+    const { thread } = req.params
+    const { deletePassword } = req.body
+    const rows = await threadRepo.delete(thread, deletePassword)
+    res.send(rows)
 })
 module.exports = threadRoutes
