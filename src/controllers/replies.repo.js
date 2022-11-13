@@ -3,11 +3,28 @@ const toCamelCase = require("../utils/toCamelCase");
 
 class RepliesRepo {
   static async find(threadId) {
-    const { rows } = pool.query(
-      `SELECT id, content, created_at, thread_id FROM threads WHERE thread_id = $1`,
+    const { rows } = await pool.query(
+      `SELECT id, content, created_at, thread_id FROM replies WHERE thread_id = $1 ORDER BY created_at;`,
       [threadId]
     );
-    return toCamelCase(rows);
+
+    if (!!rows) {
+      return toCamelCase(rows);
+    } else {
+      return [];
+    }
+  }
+
+  static async findAllWithLimit() {
+    const { rows } = await pool.query(`SELECT thread_id, id, content, created_at
+    FROM
+          (SELECT thread_id, id, content, created_at,
+          ROW_NUMBER() OVER (PARTITION BY thread_id ORDER BY created_at DESC) as replies_order
+
+    FROM replies) AS replies_from_threads
+    WHERE replies_order <= 2;`);
+
+    return toCamelCase(rows)
   }
 
   static async insert(threadId, content, passwordDelete) {
@@ -50,6 +67,8 @@ class RepliesRepo {
       return { error: "Thread not found" };
     }
   }
+
+  
 }
 
 module.exports = RepliesRepo;

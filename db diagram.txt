@@ -1,0 +1,28 @@
+
+Table threads {
+  id INTEGER [pk]
+  name VARCHAR(50) [not null]
+  content VARCHAR (1000)  [not null]
+  created_at TIMESTAMP [default: `now()`]
+  bumped_at TIMESTAMP [default: `now()`]
+  board_id INTEGER [ref:> boards.id]
+  password_delete VARCHAR(16) [not null]
+  reported BOOLEAN [default: false]
+}
+
+Table boards {
+  id INTEGER [pk]
+  name VARCHAR(20) [not null]
+  description VARCHAR(400) [not null]
+  created_at TIMESTAMP [default: `now()`]
+  bumped_at TIMESTAMP [default: `now()`]
+}
+
+Table replies {
+  id INTEGER [pk]
+  content VARCHAR(1000) [not null]
+  created_at TIMESTAMP [default: `now()`]
+  reported BOOLEAN [default: false]
+  password_delete VARCHAR(16) [not null]
+  thread_id INTEGER [ref: > threads.id]
+}

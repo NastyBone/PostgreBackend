@@ -4,10 +4,22 @@ const toCamelCase = require("../utils/toCamelCase");
 class ThreadRepo {
   static async find(threadId) {
     const { rows } = await pool.query(
-      `SELECT id, name, content, created_at, bumped_at, board_id FROM threads WHERE id = $1;`,
+      `SELECT id, name, content, created_at, bumped_at, board_id FROM threads WHERE id = $1 ORDER BY bumped_at;`,
       [threadId]
     );
-    return toCamelCase(rows);
+    return toCamelCase(rows)[0];
+  }
+
+  static async findByBoard(boardId) {
+    const { rows } = await pool.query(
+      `SELECT id, name, content, created_at, bumped_at, board_id FROM threads WHERE board_id = $1 ORDER BY bumped_at;`,
+      [boardId]
+    );
+    if (!!rows) {
+      return toCamelCase(rows);
+    } else {
+      return [];
+    }
   }
   static async insert(name, content, boardId, passwordDelete) {
     const { rows } = await pool.query(
@@ -42,8 +54,16 @@ class ThreadRepo {
         return { error: "Password doesn't match" };
       }
     } else {
-        return {error: "Thread not found"}
+      return { error: "Thread not found" };
     }
+  }
+
+  static async bumpThread(threadId) {
+    const { rows } = await pool.query(
+      `UPDATE threads SET bumped_at = CURRENT_TIMESTAMP WHERE id = $1 RETURNING *;`,
+      [threadId]
+    );
+    return toCamelCase(rows)[0]
   }
 }
 
