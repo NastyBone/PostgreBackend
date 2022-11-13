@@ -10,7 +10,7 @@ exports.up = pgm => {
             created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
             reported BOOLEAN DEFAULT FALSE,
             password_delete VARCHAR(16) NOT NULL,
-            thread_id INTEGER REFERENCES threads(id) ON DELETE CASCADE
+            thread_id INTEGER REFERENCES threads(id) ON DELETE CASCADE NOT NULL
         );
     `)
 };

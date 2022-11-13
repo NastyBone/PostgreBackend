@@ -17,7 +17,7 @@ boardRoutes.get('/:board', async (req, res) =>{
 
    for (let i = 0; i< threads.length; i++){
             threads[i].replies = [];
-            threads[i].replies.push(replies.filter(reply => reply.threadId == threads[i].id))
+            threads[i].replies.push(...replies.filter(reply => reply.threadId == threads[i].id))
    }
     board.threads = threads;
    

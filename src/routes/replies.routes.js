@@ -5,11 +5,21 @@ const threadRepo = require('../controllers/threads.repo')
 
 
 
-// New Reply - POST
+// New Reply To Thread - POST
 repliesRoutes.post('/:board/:thread', async (req, res) =>{
     const { thread, board } = req.params
    const { content, passwordDelete } = req.body
    const result = await repliesRepo.insert(thread, content, passwordDelete)
+   res.send(result)
+   boardRepo.bumpBoard(board)
+   threadRepo.bumpThread(thread)
+})
+
+// New Reply To Reply - POST
+repliesRoutes.post('/:board/:thread/:reply', async (req, res) =>{
+    const { thread, board, reply } = req.params
+   const { content, passwordDelete } = req.body
+   const result = await repliesRepo.insert(thread, content, passwordDelete, reply)
    res.send(result)
    boardRepo.bumpBoard(board)
    threadRepo.bumpThread(thread)

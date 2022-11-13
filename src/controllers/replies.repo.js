@@ -11,15 +11,15 @@ class RepliesRepo {
     if (!!rows) {
       return toCamelCase(rows);
     } else {
-      return [];
+      return []
     }
   }
 
   static async findAllWithLimit() {
-    const { rows } = await pool.query(`SELECT thread_id, id, content, created_at
+    const { rows } = await pool.query(`SELECT thread_id, id, content, created_at, reply_id
     FROM
-          (SELECT thread_id, id, content, created_at,
-          ROW_NUMBER() OVER (PARTITION BY thread_id ORDER BY created_at DESC) as replies_order
+          (SELECT thread_id, id, content, created_at, reply_id,
+          ROW_NUMBER() OVER (PARTITION BY thread_id ORDER BY created_at) as replies_order
 
     FROM replies) AS replies_from_threads
     WHERE replies_order <= 2;`);
@@ -27,10 +27,10 @@ class RepliesRepo {
     return toCamelCase(rows)
   }
 
-  static async insert(threadId, content, passwordDelete) {
+  static async insert(threadId, content, passwordDelete, replyId) {
     const { rows } = await pool.query(
-      `INSERT INTO replies (thread_id, content, password_delete) VALUES ($1, $2, $3) RETURNING *`,
-      [threadId, content, passwordDelete]
+      `INSERT INTO replies (thread_id, content, password_delete, reply_id) VALUES ($1, $2, $3, $4) RETURNING *`,
+      [threadId, content, passwordDelete, replyId]
     );
     return toCamelCase(rows);
   }

@@ -12,7 +12,7 @@ class ThreadRepo {
 
   static async findByBoard(boardId) {
     const { rows } = await pool.query(
-      `SELECT id, name, content, created_at, bumped_at, board_id FROM threads WHERE board_id = $1 ORDER BY bumped_at;`,
+      `SELECT id, name, content, created_at, bumped_at, board_id FROM threads WHERE board_id = $1 ORDER BY bumped_at DESC;`,
       [boardId]
     );
     if (!!rows) {
